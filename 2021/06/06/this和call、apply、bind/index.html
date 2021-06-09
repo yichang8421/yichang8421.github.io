@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/faviconBiaoqianye.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="三者的用途是指定函数调用时所引用上下文对象（context object）的值，即this的值。">
+  <meta name="author" content="yichang8421">
+  <meta name="keywords" content="">
+  
+  <title>this和call/apply/bind - Andy8421&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Andy8421's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/t017add0be129a366b8(yasuo).jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="this和call/apply/bind">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-06 20:00" pubdate>
+        2021年6月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">this和call/apply/bind</h1>
+            
+            <div class="markdown-body">
+              <h1 id="this和call-apply-bind"><a href="#this和call-apply-bind" class="headerlink" title="this和call/apply/bind"></a>this和call/apply/bind</h1><p>概括的说，call、apply、bind的用途是指定函数调用时所引用上下文对象（context object）的值，即<strong>this的值</strong>。</p>
+<h2 id="深入理解this"><a href="#深入理解this" class="headerlink" title="深入理解this"></a>深入理解this</h2><h3 id="普通函数的this"><a href="#普通函数的this" class="headerlink" title="普通函数的this"></a>普通函数的this</h3><p>在最普通的函数调用中，this引用的是把函数当成方法调用的上下文对象，此时this值就是window。或者说，在网页的全局上下文中调用函数时，this指向window。</p>
+<p>举例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Jackie Chan&#x27;</span>;<br><span class="hljs-comment">//window.hero = &#x27;Jackie Chan&#x27;;</span><br><br><span class="hljs-keyword">let</span> person = &#123;<br>    <span class="hljs-attr">hero</span>:<span class="hljs-string">&#x27;Eason Chan&#x27;</span><br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myHero</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.hero;<br>&#125;<br><br>myHero();			<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br><br>person.myHero = myHero;<br>person.myHero();	<span class="hljs-comment">//&#x27;Eason Chan&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<p>定义在全局上下文中的函数 <code>myHero()</code>引用了 <code>this</code> 对象。这个 this 到底引用哪个对象必须到<br>函数被调用时才能确定。 </p>
+<p>若想只调用<code>myHero()</code>就得到person.hero值，则可以使用call设定this指向：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs JavaScript">myhero();						<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br>myHero.call(person,);			<span class="hljs-comment">//&#x27;Eason Chan&#x27;</span><br><br>myHero.call(<span class="hljs-literal">null</span>,);				<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br>myHero.call(<span class="hljs-literal">undefined</span>,);		<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br>myHero.call(<span class="hljs-string">&#x27;&#x27;</span>,);				<span class="hljs-comment">//undefined</span><br>...<br>myHero.call([其他falsy值],);	  <span class="hljs-comment">//undefined</span><br></code></pre></div></td></tr></table></figure>
+
+<p>浏览器里有一条规则：如果传的 context 是 null 或 undefined（不包括其他falsy值），那么 window 对象就是默认的 context（严格模式下默认 context 是 undefined），因此会出现第三行代码以后的结果。</p>
+<h3 id="箭头函数的this"><a href="#箭头函数的this" class="headerlink" title="箭头函数的this"></a>箭头函数的this</h3><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Jackie Chan&#x27;</span>;<br><span class="hljs-comment">//window.hero = &#x27;Jackie Chan&#x27;;</span><br><br><span class="hljs-keyword">let</span> person = &#123;<br>    <span class="hljs-attr">hero</span>:<span class="hljs-string">&#x27;Eason Chan&#x27;</span><br>&#125;;<br><br><span class="hljs-keyword">let</span> myHero = <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">this</span>.hero;<br><br>myHero();			<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br><br>person.myHero = myHero;<br>person.myHero();	<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<p>在箭头函数中，this 引用的是定义箭头函数的上下文。 由于箭头函数<code>myHero</code>是在全局作用域中定义的，所以this指向的都是window。</p>
+<p>注意：<em><strong>箭头函数的this是固定的，不能被call/apply/bind修改。</strong></em></p>
+<h3 id="闭包中的this"><a href="#闭包中的this" class="headerlink" title="闭包中的this"></a>闭包中的this</h3><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs JavaScript"><span class="hljs-keyword">var</span> color = <span class="hljs-string">&#x27;red&#x27;</span>;<br><span class="hljs-comment">// window.color = &#x27;red&#x27;;</span><br><br><span class="hljs-keyword">let</span> obj = &#123;<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,<br>    <span class="hljs-function"><span class="hljs-title">sayColor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">color</span>(<span class="hljs-params"></span>)</span>&#123;<br>         	<span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.color;   <br>        &#125;<br>	&#125;<br>&#125;;<br><br>obj.sayColor()();	<span class="hljs-comment">// &#x27;red&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<p>以上代码中，全局变量<code>color</code>和函数<code>color()</code>构成闭包。</p>
+<p>具体解释：见《闭包》</p>
+<p>要想使<code>obj.sayColor()();</code>返回obj的blue，则应该让<code>obj.color</code>和函数<code>color()</code>构成闭包。可将this保存到闭包可以访问的另一个变量that中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> color = <span class="hljs-string">&#x27;red&#x27;</span>;<br><span class="hljs-comment">// window.color = &#x27;red&#x27;;</span><br><br><span class="hljs-keyword">let</span> obj = &#123;<br>    <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,<br>    <span class="hljs-function"><span class="hljs-title">sayColor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">let</span> that = <span class="hljs-built_in">this</span>;<br>        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">color</span>(<span class="hljs-params"></span>)</span>&#123;<br>         	<span class="hljs-keyword">return</span> that.color;   <br>        &#125;<br>	&#125;<br>&#125;;<br><br>obj.sayColor()();	<span class="hljs-comment">// &#x27;blue&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="回调函数中的this"><a href="#回调函数中的this" class="headerlink" title="回调函数中的this"></a>回调函数中的this</h3><p>回调函数中的this指向window。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Jackie Chan&#x27;</span>;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">peoplesHero</span>(<span class="hljs-params">fn</span>)</span>&#123;<br>	fn();<br>    <span class="hljs-keyword">return</span> hero;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myHero</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Eason Chan&#x27;</span>;<br>    <span class="hljs-keyword">return</span> hero;<br>&#125;<br><br>peoplesHero(myHero);	<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br><br><span class="hljs-comment">//以上为同步回调，代码等价于：</span><br><span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Jackie Chan&#x27;</span>;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">peoplesHero</span>(<span class="hljs-params"></span>)</span>&#123;<br>	(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myHero</span>(<span class="hljs-params"></span>)</span>&#123;<br>    	<span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Eason Chan&#x27;</span>;<br>    	<span class="hljs-keyword">return</span> hero;<br>	&#125;)();<br>    <span class="hljs-keyword">return</span> hero;<br>&#125;<br><br>peoplesHero();			<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="call"><a href="#call" class="headerlink" title="call"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call">call</a></h2><p><code>call()</code> 方法使用一个指定的 <code>this</code> 值和单独给出的一个或多个参数来调用一个函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs JavaScript"><span class="hljs-keyword">function</span>.call(thisArg, arg1, arg2, ...)<br></code></pre></div></td></tr></table></figure>
+
+<p>代码举例在<strong>普通函数的this</strong>小节已经介绍，不再赘述。</p>
+<p>注意：<strong>正确的函数调用方式是使用call/apply/bind指定this.</strong></p>
+<h2 id="apply"><a href="#apply" class="headerlink" title="apply"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">apply</a></h2><p><code>apply()</code> 方法调用一个具有给定<code>this</code>值的函数，以及以一个数组（或<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Indexed_collections#working_with_array-like_objects">类数组对象</a>）的形式提供的参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span>.apply(thisArg, [argsArray])<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>注意：</strong>call()方法的作用和 apply() 方法非常非常类似，区别就是<code>call()</code>方法接受的是<strong>参数列表</strong>，而<code>apply()</code>方法接受的是<strong>一个参数数组</strong>。</p>
+<h2 id="bind"><a href="#bind" class="headerlink" title="bind"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">bind</a></h2><p><code>bind()</code> 方法创建一个<strong>新的函数</strong>，在 <code>bind()</code> 被调用时，这个新函数的 <code>this</code> 被指定为 <code>bind()</code> 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span>.bind(thisArg[, arg1[, arg2[, ...]]])<br></code></pre></div></td></tr></table></figure>
+
+
+
+<p>举例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> hero = <span class="hljs-string">&#x27;Jackie Chan&#x27;</span>;<br><span class="hljs-comment">//window.hero = &#x27;Jackie Chan&#x27;;</span><br><br><span class="hljs-keyword">let</span> person = &#123;<br>    <span class="hljs-attr">hero</span>:<span class="hljs-string">&#x27;Eason Chan&#x27;</span><br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myHero</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.hero;<br>&#125;<br><br><span class="hljs-keyword">var</span> sayHero = myHero.bind(person);<br><span class="hljs-built_in">console</span>.log(sayHero);			<span class="hljs-comment">//ƒ myHero()&#123; return this.hero; &#125;</span><br><br>myHero();						<span class="hljs-comment">//&#x27;Jackie Chan&#x27;</span><br>sayHero();						<span class="hljs-comment">//&#x27;Eason Chan&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="call-apply-bind的应用场景"><a href="#call-apply-bind的应用场景" class="headerlink" title="call/apply/bind的应用场景"></a>call/apply/bind的应用场景</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bc541afad6ee">call、apply和bind方法的用法以及区别 - 简书</a></p>
+<ul>
+<li>求数组中的最大和最小值</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">89</span>,<span class="hljs-number">46</span>]<br><span class="hljs-keyword">var</span> max = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>,arr)<span class="hljs-comment">//89</span><br><span class="hljs-keyword">var</span> min = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-literal">null</span>,arr)<span class="hljs-comment">//1</span><br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>将类数组转化为数组</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jsx"><span class="hljs-keyword">var</span> trueArr = <span class="hljs-built_in">Array</span>.prototype.slice.call(arrayLike)<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>数组追加</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs csharp"><span class="hljs-keyword">var</span> arr1 = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>];<br><span class="hljs-keyword">var</span> arr2 = [<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>];<br><span class="hljs-keyword">var</span> total = [].push.apply(arr1, arr2);<span class="hljs-comment">//6</span><br><span class="hljs-comment">// arr1 [1, 2, 3, 4, 5, 6]</span><br><span class="hljs-comment">// arr2 [4,5,6]</span><br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>判断变量类型</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jsx"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isArray</span>(<span class="hljs-params">obj</span>)</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.toString.call(obj) == <span class="hljs-string">&#x27;[object Array]&#x27;</span>;<br>&#125;<br>isArray([]) <span class="hljs-comment">// true</span><br>isArray(<span class="hljs-string">&#x27;dot&#x27;</span>) <span class="hljs-comment">// false</span><br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>利用call和apply做继承</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jsx"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params">name,age</span>)</span>&#123;<br>    <span class="hljs-comment">// 这里的this都指向实例</span><br>    <span class="hljs-built_in">this</span>.name = name<br>    <span class="hljs-built_in">this</span>.age = age<br>    <span class="hljs-built_in">this</span>.sayAge = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.age)<br>    &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Female</span>(<span class="hljs-params"></span>)</span>&#123;<br>    Person.apply(<span class="hljs-built_in">this</span>,<span class="hljs-built_in">arguments</span>)<span class="hljs-comment">//将父元素所有方法在这里执行一遍就继承了</span><br>&#125;<br><span class="hljs-keyword">var</span> dot = <span class="hljs-keyword">new</span> Female(<span class="hljs-string">&#x27;Dot&#x27;</span>,<span class="hljs-number">2</span>)<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>使用 log 代理 console.log</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jsx"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-built_in">console</span>.log.apply(<span class="hljs-built_in">console</span>, <span class="hljs-built_in">arguments</span>);<br>&#125;<br><span class="hljs-comment">// 当然也有更方便的 var log = console.log()</span><br></code></pre></div></td></tr></table></figure>
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/01/%E9%97%AD%E5%8C%85/">
+                        <span class="hidden-mobile">闭包</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
