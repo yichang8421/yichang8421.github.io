@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/faviconBiaoqianye.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文使用原生JavaScript实现了多种排序算法。">
+  <meta name="author" content="yichang8421">
+  <meta name="keywords" content="">
+  
+  <title>排序算法——JavaScript实现 - Andy8421&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Andy8421's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/t017add0be129a366b8(yasuo).jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="排序算法——JavaScript实现">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-01-01 18:44" pubdate>
+        2020年1月1日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      991 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">排序算法——JavaScript实现</h1>
+            
+            <div class="markdown-body">
+              <h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><h2 id="选择排序O-n-2"><a href="#选择排序O-n-2" class="headerlink" title="选择排序O(n^2)"></a>选择排序O(n^2)</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">//返回数列的最小值</span><br><span class="hljs-comment">//递归方法</span><br><span class="hljs-keyword">let</span> min = <span class="hljs-function">(<span class="hljs-params">number</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (number.length &gt; <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-keyword">return</span> min([number[<span class="hljs-number">0</span>], min(number.slice(<span class="hljs-number">1</span>))]);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-literal">null</span>, number);<br>    &#125;<br>&#125;;<br><span class="hljs-comment">//循环方法</span><br><span class="hljs-comment">// let minCycle = (number) =&gt; &#123;</span><br><span class="hljs-comment">//     return number[minIndexCycle(number)];</span><br><span class="hljs-comment">// &#125;;</span><br><br><span class="hljs-comment">//选择排序</span><br><span class="hljs-comment">//递归方法</span><br><span class="hljs-keyword">let</span> minIndex = <span class="hljs-function">(<span class="hljs-params">number</span>) =&gt;</span> number.indexOf(min(number));<br><br><span class="hljs-comment">//递归方法</span><br><span class="hljs-keyword">let</span> sort = <span class="hljs-function">(<span class="hljs-params">number</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (number.length &gt; <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-keyword">let</span> index = minIndex(number);<br>        <span class="hljs-keyword">let</span> min = number[index];<br>        number.splice(index, <span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">return</span> [min].concat(sort(number));<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> number[<span class="hljs-number">0</span>] &lt; number[<span class="hljs-number">1</span>] ? number : number.reverse();<br>    &#125;<br>&#125;;<br><br><span class="hljs-comment">//选择排序</span><br><span class="hljs-comment">//循环方法</span><br><span class="hljs-keyword">let</span> minIndexCycle = <span class="hljs-function">(<span class="hljs-params">number</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">let</span> minIndex = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>; i &lt; number.length; i++) &#123;<br>        <span class="hljs-keyword">if</span> (number[i] &lt; number[minIndex])<br>            minIndex = i;<br>    &#125;<br>    <span class="hljs-keyword">return</span> minIndex;<br>&#125;;<br><br><span class="hljs-keyword">let</span> swap = <span class="hljs-function">(<span class="hljs-params">number, a, b</span>) =&gt;</span> &#123;<br>    number[a] = number[a] ^ number[b];<br>    number[b] = number[a] ^ number[b];<br>    number[a] = number[a] ^ number[b];<br>    <span class="hljs-keyword">return</span> number;<br>&#125;<br><br><span class="hljs-comment">//循环方法</span><br><span class="hljs-keyword">let</span> sortCycle = <span class="hljs-function">(<span class="hljs-params">number</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; number.length - <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;------&quot;</span>);<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`i:<span class="hljs-subst">$&#123;i&#125;</span>`</span>);<br>        <span class="hljs-comment">// let tempNumber = number.slice(i);</span><br>        <span class="hljs-comment">// let minIndex = minIndexCycle(tempNumber) + i;</span><br>        <span class="hljs-comment">// 第i项及之前数列都是排好序的，只用考虑第i项之后的数列排序</span><br>        <span class="hljs-comment">// minIndexCycle(tempNumber)得到的是剔除前i项排好序数列之后的新数组中，最小数在该数组中的下标</span><br>        <span class="hljs-comment">// 由于新数组下标是重新从零开始的，要找到此最小数在number中对应的下标。应该加i。</span><br>        <span class="hljs-keyword">let</span> minIndex = minIndexCycle(number.slice(i)) + i;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`minIndex:<span class="hljs-subst">$&#123;minIndex&#125;</span>`</span>);<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`min:<span class="hljs-subst">$&#123;number[minIndex]&#125;</span>`</span>);<br>        <span class="hljs-comment">//找到number中最小数字的下标，然后将其与当前下标的数字交换位置</span><br>        <span class="hljs-keyword">if</span> (minIndex != i)<br>            swap(number, minIndex, i);<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`number:[<span class="hljs-subst">$&#123;number&#125;</span>]`</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> number;<br>&#125;;<br><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="快速排序O-nlog2n"><a href="#快速排序O-nlog2n" class="headerlink" title="快速排序O(nlog2n)"></a>快速排序O(nlog2n)</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">//快速排序</span><br><span class="hljs-comment">//递归方法</span><br><span class="hljs-keyword">let</span> quickSort = <span class="hljs-function"><span class="hljs-params">arr</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (arr.length &lt;= <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">return</span> arr;<br>    <span class="hljs-comment">// 基准数字选择arr中间位置最大整数数(向下取整)</span><br>    <span class="hljs-keyword">let</span> pivotIndex = <span class="hljs-built_in">Math</span>.floor(arr.length / <span class="hljs-number">2</span>);<br>    <span class="hljs-comment">// 取出基准数字</span><br>    <span class="hljs-keyword">let</span> pivot = arr.splice(pivotIndex, <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>];<br>    <span class="hljs-keyword">let</span> left = [];<br>    <span class="hljs-keyword">let</span> right = [];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) &#123;<br>        <span class="hljs-comment">// 如果剩余数小于基准数，则将其放入左边数组；反之放入右边数组</span><br>        <span class="hljs-keyword">if</span> (arr[i] &lt; pivot) &#123;<br>            left.push(arr[i]);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            right.push(arr[i]);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> quickSort(left).concat([pivot], quickSort(right));<br>&#125;;<br><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="归并排序O-nlog2n"><a href="#归并排序O-nlog2n" class="headerlink" title="归并排序O(nlog2n)"></a>归并排序O(nlog2n)</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">// 归并排序</span><br><span class="hljs-comment">// 先分解，再合并</span><br><span class="hljs-comment">// 递归方法</span><br><br><span class="hljs-comment">// 分解</span><br><span class="hljs-keyword">let</span> mergeSort = <span class="hljs-function"><span class="hljs-params">arr</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (arr.length === <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">return</span> arr;<br>    &#125;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`----`</span>);<br>    <span class="hljs-comment">/* slice() 方法返回一个新的数组对象，这一对象是一个由 begin 和 end 决定的原数组的浅拷贝（包括 begin，不包括end）。原始数组不会被改变。*/</span><br>    <span class="hljs-keyword">let</span> left = arr.slice(<span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.floor(arr.length / <span class="hljs-number">2</span>));<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`left:<span class="hljs-subst">$&#123;left&#125;</span>`</span>);<br>    <span class="hljs-keyword">let</span> right = arr.slice(<span class="hljs-built_in">Math</span>.floor(arr.length / <span class="hljs-number">2</span>),);<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`right:<span class="hljs-subst">$&#123;right&#125;</span>`</span>);<br>    <span class="hljs-keyword">return</span> merge(mergeSort(left), mergeSort(right));<br>&#125;;<br><br><span class="hljs-comment">// 合并</span><br><span class="hljs-keyword">let</span> merge = <span class="hljs-function">(<span class="hljs-params">left, right</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (!left.length)<br>        <span class="hljs-comment">// 当left数组已经全部拿空了，那么就直接将right数组连接到新数组</span><br>        <span class="hljs-keyword">return</span> right;<br>    <span class="hljs-keyword">if</span> (!right.length)<br>        <span class="hljs-keyword">return</span> left;<br><br>    <span class="hljs-keyword">if</span> (left[<span class="hljs-number">0</span>] &gt; right[<span class="hljs-number">0</span>]) &#123;<br>        <span class="hljs-comment">// right[0]是两个数组中的最小数，先放在左边。然后left和right剩余部分按相同方法进行合并。</span><br>        <span class="hljs-keyword">return</span> [right[<span class="hljs-number">0</span>]].concat(merge(left, right.slice(<span class="hljs-number">1</span>,)))<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> [left[<span class="hljs-number">0</span>]].concat(merge(left.slice(<span class="hljs-number">1</span>,), right));<br>    &#125;<br>    <span class="hljs-comment">// return left[0] &gt; right[0] ? [right[0]].concat(merge(left, right.slice(1))) : [left[0]].concat(merge(left.slice(1), right));</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="计数排序O-n-max"><a href="#计数排序O-n-max" class="headerlink" title="计数排序O(n+max)"></a>计数排序O(n+max)</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">// 计数排序</span><br><span class="hljs-keyword">let</span> countSort = <span class="hljs-function"><span class="hljs-params">arr</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">let</span> count = &#123;&#125;,<br>        <span class="hljs-comment">// count用一个哈希表定义，便于计数</span><br>        max = <span class="hljs-number">0</span>,<br>        result = [];<br><br>    <span class="hljs-comment">// 遍历数组，对所有数字计数。获得哈希表count</span><br>    <span class="hljs-comment">// 这样做的目的是便于下一步循环，判断数字是否应该压入数组</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index = <span class="hljs-number">0</span>; index &lt; arr.length; index++) &#123;<br>        <span class="hljs-keyword">if</span> (!(arr[index] <span class="hljs-keyword">in</span> count)) &#123;<br>            count[arr[index]] = <span class="hljs-number">1</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            count[arr[index]] += <span class="hljs-number">1</span>;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (arr[index] &gt; max)<br>            max = arr[index];<br>    &#125;<br><br>    <span class="hljs-comment">// 遍历哈希表，从小到大依次将所有数字压入新数组</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> value = <span class="hljs-number">0</span>; value &lt;= max; value++) &#123;<br>        <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">in</span> count) &#123;<br>    <span class="hljs-comment">// 将所有数字都压入新数组。count记录了几次，value就要压入几次</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; count[value]; i++) &#123;<br>                result.push(value);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="各种排序方法的比较"><a href="#各种排序方法的比较" class="headerlink" title="各种排序方法的比较"></a>各种排序方法的比较</h2><p><img src="/2020/01/01/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.jpeg" srcset="/img/loading.gif" lazyload></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Front-end/">Front end</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    版权声明：本文作者为「Andy8421」.本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/01/29/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3jQuery%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">深入理解JQuery设计思想--基于手写DOM库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/11/29/JS%E5%AF%B9%E8%B1%A1%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
+                        <span class="hidden-mobile">实践篇-—JS对象基本用法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
