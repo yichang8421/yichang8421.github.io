@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      577 字
+      568 字
     </span>
   
 
@@ -230,7 +230,7 @@
             <h1 style="display: none">.sync修饰符</h1>
             
             <div class="markdown-body">
-              <h1 id="sync-2-3-0-自定义事件-—-Vue-js-vuejs-org"><a href="#sync-2-3-0-自定义事件-—-Vue-js-vuejs-org" class="headerlink" title="[.sync (2.3.0+)](自定义事件 — Vue.js (vuejs.org))"></a>[<code>.sync</code> (2.3.0+)](<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6">自定义事件 — Vue.js (vuejs.org)</a>)</h1><p>有时候，我们需要对组件进行双向绑定。这么做的目的时避免父组件和子组件分别改变同一个prop值而产生冲突。具体思路是，只允许子组件向父组件发出修改组件值得意图，而实际修改组件值得动作由父组件“监听-响应“动作来完成。</p>
+              <h1 id="sync修饰符"><a href="#sync修饰符" class="headerlink" title=".sync修饰符"></a><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6">.sync修饰符</a></h1><p>有时候，我们需要对组件进行双向绑定。这么做的目的时避免父组件和子组件分别改变同一个prop值而产生冲突。具体思路是，只允许子组件向父组件发出修改组件值得意图，而实际修改组件值得动作由父组件“监听-响应“动作来完成。</p>
 <p>这个过程利用了 <code>EventBus</code> 来完成父子组件之间得通信。</p>
 <p>而<code>.sync</code> (2.3.0+) 语法糖，会扩展成一个更新父组件绑定值的 <code>v-on</code> 侦听器。</p>
 <p>具体见一下例子：</p>
@@ -248,7 +248,7 @@
 
 <p>父组件可以监听事件<code>&quot;update:sendData&quot;</code>并根据需要更新本地的数据 property。</p>
 <p><a target="_blank" rel="noopener" href="https://codesandbox.io/s/jovial-murdock-qm5pk">点击这里看结果</a></p>
-<p><img src="/2021/07/15/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E4%B8%AD.sync%E4%BF%AE%E9%A5%B0%E7%AC%A6/Users\11\AppData\Roaming\Typora\typora-user-images\1626454149982.png" srcset="/img/loading.gif" lazyload alt="1626454149982"></p>
+<p><img src="/2021/07/15/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E4%B8%AD.sync%E4%BF%AE%E9%A5%B0%E7%AC%A6/1626454149982.png" srcset="/img/loading.gif" lazyload alt="1626454149982"></p>
 <p>vue 修饰符sync的功能是：当一个子组件改变了一个 <code>prop</code> 的值时，这个变化也会同步到父组件中所绑定。这样就避免了父组件和子组件分别改变同一个prop值而产生冲突。</p>
 
             </div>
