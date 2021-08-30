@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/faviconBiaoqianye.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本文记录了 BitByBit 记账 Vue 版项目开发遇到的问题和学到的技术。">
+  <meta name="author" content="yichang8421">
+  <meta name="keywords" content="">
+  
+  <title>BitByBit 记账 Vue 版开发记录 - Andy8421&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Andy8421's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/t017add0be129a366b8(yasuo).jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="BitByBit 记账 Vue 版开发记录">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-20 20:00" pubdate>
+        2021年8月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      25
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">BitByBit 记账 Vue 版开发记录</h1>
+            
+            <div class="markdown-body">
+              <h1 id="BitByBit-记账开发问题总结"><a href="#BitByBit-记账开发问题总结" class="headerlink" title="BitByBit 记账开发问题总结"></a>BitByBit 记账开发问题总结</h1><h2 id="使用-svg-sprite-loader-引入-svg-文件"><a href="#使用-svg-sprite-loader-引入-svg-文件" class="headerlink" title="使用 svg-sprite-loader 引入 .svg 文件"></a>使用 svg-sprite-loader 引入 .svg 文件</h2><p><img src="/2021/08/20/BitByBit%20%E8%AE%B0%E8%B4%A6%20Vue%20%E7%89%88%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/Users\11\AppData\Roaming\Typora\typora-user-images\1630137354858.png" srcset="/img/loading.gif" lazyload alt="1630137354858"></p>
+<p>TypeScript 中如果直接引入 .svg 文件将报错： <code>cannot find module “xxx.svg”</code></p>
+<p>搜索资料，发现需要在 Vue 项目的 <code>shims-vue.d.ts</code> 文件中添加如下配置：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">declare</span> <span class="hljs-built_in">module</span> <span class="hljs-string">&quot;*.svg&quot;</span> &#123;<br>  <span class="hljs-keyword">const</span> content: <span class="hljs-built_in">any</span>;<br>  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> content;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>但是随后发现引入进来的 <code>.svg</code> 无法显示图标，控制台打印引入的 <code>.svg</code> 文件得到的并不是图标文件，而是一个字符串形式的路径。</p>
+<p>这个路径应该可以直接作为 <img> 标签的 <code>src</code> 传入，但是这种方法使得随后修改 <code>.svg</code> 文件源代码更加麻烦。</p>
+<p><img src="/2021/08/20/BitByBit%20%E8%AE%B0%E8%B4%A6%20Vue%20%E7%89%88%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/Users\11\AppData\Roaming\Typora\typora-user-images\1630137987356.png" srcset="/img/loading.gif" lazyload alt="1630137987356"></p>
+<p>于是我查阅相关资料，希望可以直接解析出 <code>.svg</code> 源文件。发现缺少 <code>svg-loader</code> 导致webpack无法解析出 .svg 文件。目前有一个较好用的插件： <code>svg-sprite-loader</code> 可以解决这个问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">yarn add svg-sprite-loader -D<br></code></pre></div></td></tr></table></figure>
+
+<p>官方给出的 <code>webpage.config</code> 配置如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript">&#123;<br>  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.svg$/</span>,<br>  loader: <span class="hljs-string">&#x27;svg-sprite-loader&#x27;</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>配置插件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript">&#123;<br>  <span class="hljs-attr">plugins</span>: [<br>    <span class="hljs-keyword">new</span> SpriteLoaderPlugin(&#123;<br>      <span class="hljs-attr">plainSprite</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">spriteAttrs</span>: &#123;<br>        <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;my-custom-sprite-id&#x27;</span><br>      &#125;<br>    &#125;)<br>  ]<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+
+
+<p>但是<strong>新的问题是 Vue-CLI 并不提供 <code>Webpack.config.js</code> 配置文件</strong>，创建的项目下只有一个 <code>vue.config.js</code> 。最后，我选择使用根据 Vue-CLI 的 <strong>链式操作</strong> 将以上代码翻译成 <code>vue.config.js</code> 接受的代码。修改源文件，例如：<code>.svg</code> 图标颜色也比较方便，直接改 <code>vue.config.js</code> 配置文件即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>);<br><br><span class="hljs-built_in">module</span>.exports = &#123;<br>    <span class="hljs-attr">chainWebpack</span>: <span class="hljs-function"><span class="hljs-params">config</span> =&gt;</span> &#123;<br>        <span class="hljs-keyword">const</span> dir = path.resolve(__dirname, <span class="hljs-string">&#x27;src/assets/icons&#x27;</span>);<br><br>        <span class="hljs-comment">// 配置svg-sprite-loder</span><br>        config.module<br>            .rule(<span class="hljs-string">&#x27;svg-sprite&#x27;</span>)<br>            .test(<span class="hljs-regexp">/\.svg$/</span>)<br>            .include.add(dir).end() <span class="hljs-comment">// 只包含 icons 目录</span><br>            .use(<span class="hljs-string">&#x27;svg-sprite-loader&#x27;</span>).loader(<span class="hljs-string">&#x27;svg-sprite-loader&#x27;</span>)<br>            .options(&#123;<span class="hljs-attr">extract</span>: <span class="hljs-literal">false</span>&#125;).end();	<span class="hljs-comment">// 不将其解析出文件</span><br><br>        <span class="hljs-comment">//  删除原有彩色</span><br>        <span class="hljs-comment">// .use(&#x27;svgo-loader&#x27;).loader(&#x27;svgo-loader&#x27;).tap(options =&gt; (&#123;...options, plugins: [&#123;removeAttrs: &#123;attrs: &#x27;fill&#x27;&#125;&#125;]&#125;)).end();</span><br><br>        <span class="hljs-comment">// 配置插件</span><br>        config.plugin(<span class="hljs-string">&#x27;svg-sprite&#x27;</span>).use(<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;svg-sprite-loader/plugin&#x27;</span>), [&#123;<span class="hljs-attr">plainSprite</span>: <span class="hljs-literal">true</span>&#125;]);<br><br>        <span class="hljs-comment">// 其他 svg loader 排除 icons 目录</span><br>        config.module.rule(<span class="hljs-string">&#x27;svg&#x27;</span>).exclude.add(dir); <br><br>        config<br>            .plugin(<span class="hljs-string">&#x27;html&#x27;</span>)<br>            .tap(<span class="hljs-function"><span class="hljs-params">args</span> =&gt;</span> &#123;<br>                args[<span class="hljs-number">0</span>].title = <span class="hljs-string">&#x27;BitByBit&#x27;</span><br>                <span class="hljs-keyword">return</span> args<br>            &#125;);<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>随后 <code>&lt;symbol&gt;</code>  标签被引入 <code>&lt;svg&gt;</code> ，此时便可正常使用 <strong><code>svg-symbol</code></strong> 了:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> money <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@/assents/icons/money.svg&quot;</span>;<br><span class="hljs-built_in">console</span>.log(money);<br></code></pre></div></td></tr></table></figure>
+
+
+
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">use</span> <span class="hljs-attr">:xlink:href</span>=<span class="hljs-string">&quot;#money&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<p><img src="/2021/08/20/BitByBit%20%E8%AE%B0%E8%B4%A6%20Vue%20%E7%89%88%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/Users\11\AppData\Roaming\Typora\typora-user-images\1630140880228.png" srcset="/img/loading.gif" lazyload alt="1630140880228"></p>
+<h2 id="一次性引入所有-svg-文件"><a href="#一次性引入所有-svg-文件" class="headerlink" title="一次性引入所有 .svg 文件"></a>一次性引入所有 .svg 文件</h2><p>每次引入图标文件都要写一遍 <code>svg-symbol</code> 的代码，十分冗余。经过大量查阅资料，最终我使用以下方法一次性引入了所有文件：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">let</span> importAll = <span class="hljs-function">(<span class="hljs-params">requireContext: __WebpackModuleApi.RequireContext</span>) =&gt;</span> requireContext.keys().forEach(requireContext);<br><span class="hljs-keyword">try</span> &#123;<br>    importAll(<span class="hljs-built_in">require</span>.context(<span class="hljs-string">&quot;../assets/icons&quot;</span>, <span class="hljs-literal">true</span>, <span class="hljs-regexp">/\.svg$/</span>));<br>&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>    <span class="hljs-built_in">console</span>.log(error);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="TS-组件的使用"><a href="#TS-组件的使用" class="headerlink" title="TS 组件的使用"></a>TS 组件的使用</h2><h2 id="重大-bug：手机端微信浏览器中-window-prompt-无效"><a href="#重大-bug：手机端微信浏览器中-window-prompt-无效" class="headerlink" title="重大 bug：手机端微信浏览器中 window.prompt() 无效"></a>重大 bug：手机端微信浏览器中 window.prompt() 无效</h2><p>PC 端和手机浏览器端开发测试完毕，当我准备最终发布时，竟发现一个重大 bug ：<strong>微信手机端浏览器</strong>上无法添加标签。经过多端浏览器测试，发现也只有微信浏览器无法添加标签。这说明产生的 bug 不是代码的问题，原因可能是手机微信浏览器的数据库存储 或者 原生 api 不兼容手机微信浏览器。但是由于 Statistics 保存功能可以正常使用，统计图和收支明细也都可以正常显示，问题肯定不是出在 localStorage 上。最终确定JavaScript 原生api 不兼容手机端微信浏览器。经过打断点，发现添加标签时以下代码未执行，这证明了我的推断：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TagHelper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Vue</span> </span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-title">createTag</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> name = <span class="hljs-built_in">window</span>.prompt(<span class="hljs-string">&quot;请输入自定义标签&quot;</span>);<br>        <span class="hljs-keyword">if</span> (name) &#123;<br>            <span class="hljs-comment">// 此句未执行</span><br>            <span class="hljs-built_in">this</span>.$store.commit(<span class="hljs-string">&quot;createTag&quot;</span>, name);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 此句执行</span><br>            <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&quot;fuck 标签名不能为空&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.$store.state.createTagError) &#123;<br>            <span class="hljs-built_in">window</span>.alert(map[<span class="hljs-built_in">this</span>.$store.state.createTagError.message] || <span class="hljs-string">&quot;未知错误&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>手机端微信浏览器添加标签时，页面跳出待提交提示框，但是并没有被阻塞直接弹出 <code>&quot;fuck 标签名不能为空&quot;</code> ，这说明微信不认识 <code>window.prompt();</code> ，它拿到的 <code>name</code> 值为 <code>undefined</code></p>
+<p><img src="/2021/08/20/BitByBit%20%E8%AE%B0%E8%B4%A6%20Vue%20%E7%89%88%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/Users\11\AppData\Roaming\Typora\typora-user-images\1630157942279.png" srcset="/img/loading.gif" lazyload alt="1630157942279"></p>
+<p>为此，我专门自己封装了 <code>MyPrompt.vue</code> 组件解决了这个 bug。</p>
+<h3 id="Vue-实现输入弹框"><a href="#Vue-实现输入弹框" class="headerlink" title="Vue 实现输入弹框"></a>Vue 实现输入弹框</h3><p>主要使用 v-if 来实现输入弹框。</p>
+<figure class="highlight html"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;mask&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;showModal&quot;</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=false&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=true&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;add&quot;</span>&gt;</span>添加<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;pop&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;showModal&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;prompt&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>请输入新增标签名：<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span><br><span class="hljs-tag">                           <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span></span><br><span class="hljs-tag">                           <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;此处输入标签名&quot;</span></span><br><span class="hljs-tag">                           /&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=false&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript">&lt;script lang=<span class="hljs-string">&quot;ts&quot;</span>&gt;<br>    <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;<br>    <span class="hljs-keyword">import</span> &#123;Component, Prop&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue-property-decorator&quot;</span>;<br>    <span class="hljs-meta">@Component</span><br>    <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyPrompt</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Vue</span> </span>&#123;<br>        showModal = <span class="hljs-literal">false</span>;<br>    &#125;<br>&lt;/script&gt;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="实现新增标签功能"><a href="#实现新增标签功能" class="headerlink" title="实现新增标签功能"></a>实现新增标签功能</h3><p>应该可以直接在 MyPrompt 上完成添加标签操作，测试过的确没有问题，控制台并没有报警告。但本项目还是选择：按钮在父组件 Label 和 Tags ，弹框是子组件 MyPrompt ，添加标签使用父子组件传值来实现。</p>
+<p>父组件：</p>
+<figure class="highlight html"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">MyPrompt</span></span><br><span class="hljs-tag">            <span class="hljs-attr">:newName</span>=<span class="hljs-string">&quot;newName&quot;</span></span><br><span class="hljs-tag">            @<span class="hljs-attr">update:newName</span>=<span class="hljs-string">&quot;addNewName&quot;</span></span><br><span class="hljs-tag">            @<span class="hljs-attr">submit:newName</span>=<span class="hljs-string">&quot;createTag&quot;</span></span><br><span class="hljs-tag">        /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript">&lt;script lang=<span class="hljs-string">&quot;ts&quot;</span>&gt;<br>    <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;<br>    <span class="hljs-keyword">import</span> &#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue-property-decorator&quot;</span>;<br><br>    <span class="hljs-meta">@Component</span><br>    <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tags</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Vue</span> </span>&#123;<br>        newName = <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-function"><span class="hljs-title">addNewName</span>(<span class="hljs-params">value: <span class="hljs-built_in">string</span></span>)</span> &#123;<br>            <span class="hljs-built_in">this</span>.newName = value;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-title">createTag</span>(<span class="hljs-params"></span>)</span> &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.newName) &#123;<br>                <span class="hljs-built_in">this</span>.$store.commit(<span class="hljs-string">&quot;createTag&quot;</span>, <span class="hljs-built_in">this</span>.newName);<br>                <span class="hljs-built_in">this</span>.newName = <span class="hljs-string">&quot;&quot;</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">&quot;标签名不能为空&quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>&lt;/script&gt;<br></code></pre></div></td></tr></table></figure>
+
+<p>子组件：</p>
+<figure class="highlight html"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;mask&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;showModal&quot;</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=false&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=true&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;add&quot;</span>&gt;</span>添加<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;pop&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;showModal&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;prompt&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>请输入新增标签名：<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span><br><span class="hljs-tag">                            <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span></span><br><span class="hljs-tag">                            <span class="hljs-attr">:newName</span>=<span class="hljs-string">&quot;newName&quot;</span></span><br><span class="hljs-tag">                            <span class="hljs-attr">placeholder</span>=<span class="hljs-string">&quot;此处输入标签名&quot;</span></span><br><span class="hljs-tag">                            @<span class="hljs-attr">input</span>=<span class="hljs-string">&quot;onAddNewName($event.target.value)&quot;</span></span><br><span class="hljs-tag">                    /&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">button</span></span><br><span class="hljs-tag">                            @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;showModal=false;onSubmit()&quot;</span></span><br><span class="hljs-tag">                            <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span></span><br><span class="hljs-tag">                    &gt;</span>提交<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript">&lt;script lang=<span class="hljs-string">&quot;ts&quot;</span>&gt;<br>    <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;<br>    <span class="hljs-keyword">import</span> &#123;Component, Prop&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue-property-decorator&quot;</span>;<br><br>    <span class="hljs-meta">@Component</span><br>    <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyPrompt</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Vue</span> </span>&#123;<br>        showModal = <span class="hljs-literal">false</span>;<br>        <span class="hljs-meta">@Prop</span>(&#123;<span class="hljs-attr">default</span>: <span class="hljs-string">&quot;&quot;</span>&#125;)<br>        <span class="hljs-keyword">readonly</span> newName!: <span class="hljs-built_in">string</span>;<br><br>        <span class="hljs-function"><span class="hljs-title">onAddNewName</span>(<span class="hljs-params">value:<span class="hljs-built_in">string</span></span>)</span>&#123;<br>            <span class="hljs-built_in">this</span>.$emit(<span class="hljs-string">&quot;update:newName&quot;</span>,value);<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-title">onSubmit</span>(<span class="hljs-params"></span>)</span>&#123;<br>            <span class="hljs-built_in">this</span>.$emit(<span class="hljs-string">&quot;submit:newName&quot;</span>);<br>        &#125;<br>    &#125;<br>&lt;/script&gt;<br></code></pre></div></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    版权声明：本文作者为「Andy8421」.本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/12/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1/">
+                        <span class="hidden-mobile">前端路由</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
