@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      826 字
+      824 字
     </span>
   
 
@@ -230,7 +230,7 @@
             <h1 style="display: none">Vue数据响应式</h1>
             
             <div class="markdown-body">
-              <h1 id="Vue数据相应式"><a href="#Vue数据相应式" class="headerlink" title="Vue数据相应式"></a>Vue数据相应式</h1><p>Vue数据相应式：就是当修改普通JavaScript对象时，视图（view）会进行更新。</p>
+              <h1 id="Vue数据相应式"><a href="#Vue数据相应式" class="headerlink" title="Vue数据相应式"></a>Vue数据相应式</h1><p>Vue数据相应式：<strong>就是当修改普通JavaScript对象时，视图（view）会进行更新</strong>。</p>
 <h2 id="响应式系统"><a href="#响应式系统" class="headerlink" title="响应式系统"></a>响应式系统</h2><p><img src="/2021/07/01/Vue%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F/1625895230359.png" srcset="/img/loading.gif" lazyload alt="1625895230359"></p>
 <p>当把一个普通的 JavaScript 对象传入 Vue 实例作为 <code>data</code> 选项，Vue 将遍历此对象所有的 property，并使用 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"><code>Object.defineProperty</code></a> 把这些 property 全部转为 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Working_with_Objects#%E5%AE%9A%E4%B9%89_getters_%E4%B8%8E_setters">getter/setter</a>。</p>
 <p>这些 getter/setter 对用户来说是不可见的，但是在内部它们让 Vue 能够追踪依赖，在 property 被访问和修改时通知变更。</p>
@@ -257,7 +257,7 @@
 <p>JavaScript：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> app = <span class="hljs-keyword">new</span> Vue(&#123;<br>  <span class="hljs-attr">el</span>: <span class="hljs-string">&#x27;#app&#x27;</span>,<br>  <span class="hljs-attr">data</span>: &#123;<br>    <span class="hljs-attr">obj</span>: &#123;<br>      <span class="hljs-attr">a</span>: <span class="hljs-string">&#x27;a&#x27;</span>,<br>    &#125;<br>  &#125;,<br>&#125;)<br><br>app.obj.b = <span class="hljs-string">&#x27;addB&#x27;</span><br><br><span class="hljs-comment">// oupput：a</span><br></code></pre></div></td></tr></table></figure>
 
-<p>因为 b 一开始不是 obj 的 key，所以 Vue 并没有监听 b。所以即使 b 的值变了，视图也不会更新。</p>
+<p>因为 b 一开始不是 obj 的 key，所以 Vue 并没有监听 b。即使 b 的值变了，视图也不会更新。</p>
 <p>JavaScript:</p>
 <figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> app = new Vue(&#123;<br>  el: <span class="hljs-string">&#x27;#app&#x27;</span>,<br>  data: &#123;<br>    obj: &#123;<br>      <span class="hljs-selector-tag">a</span>: <span class="hljs-string">&#x27;a&#x27;</span>,<br>    &#125;<br>  &#125;,<br>&#125;)<br><br>app<span class="hljs-selector-class">.obj</span><span class="hljs-selector-class">.a</span> = <span class="hljs-string">&#x27;newA&#x27;</span><br>app<span class="hljs-selector-class">.obj</span><span class="hljs-selector-class">.b</span> = <span class="hljs-string">&#x27;addB&#x27;</span><br><br><span class="hljs-comment">// oupput：newA addB</span><br></code></pre></div></td></tr></table></figure>
 

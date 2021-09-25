@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.6k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      17
        分钟
     </span>
   
@@ -235,6 +235,14 @@
 <p>目的：它能帮助阻隔恶意文档，减少可能被攻击的媒介。</p>
 <p>当两个URL的协议，或端口，或主机（域名）不同时，都不构成同源，此时无法进行资源交流。</p>
 <p>这个方案也被称为“协议/主机/端口元组”，或者直接是 “元组”。（“元组” 是指一组项目构成的整体，双重/三重/四重/五重/等的通用形式）。</p>
+<p>随着互联网的发展，”同源政策”越来越严格。目前，如果非同源，共有三种行为受到限制。</p>
+<blockquote>
+<p>（1） Cookie、LocalStorage 和 IndexDB 无法读取。</p>
+<p>（2） DOM 无法获得。</p>
+<p>（3） AJAX 请求不能发送。</p>
+</blockquote>
+<p>虽然这些限制是必要的，但是有时很不方便，合理的用途也受到影响。下面，我将详细介绍，如何规避上面三种限制。</p>
+<p>但是注意：同源策略是针对浏览器而言的，客户端和服务器并不存在同源策略的概念。在出现非同源情况时，客户端如果向服务器发送GET请求，请求本身会成功发送，服务器得到请求也会返回响应。只是浏览器的同源策略导致客户端拿不到服务器返回的response。</p>
 <h2 id="跨域-1"><a href="#跨域-1" class="headerlink" title="跨域"></a>跨域</h2><p>目前，如果非同源，共有三种行为受到限制。</p>
 <blockquote>
 <p>（1） Cookie、LocalStorage 和 IndexDB 无法读取。</p>
@@ -243,8 +251,11 @@
 </blockquote>
 <p>虽然这些限制是必要的，但是有时很不方便，合理的用途也受到影响。下面，我将详细介绍，如何规避上面三种限制。</p>
 <p>若要实现服务器与客户端间的跨域通信，可以使用JSONP和CORS两种方法。</p>
-<h2 id="JSONP跨域"><a href="#JSONP跨域" class="headerlink" title="JSONP跨域"></a>JSONP跨域</h2><p>JSONP基本思想是，网页通过添加一个<code>&lt;script&gt;</code>元素，向服务器请求JSON数据，这种做法不受同源政策限制；服务器收到请求后，将数据放在一个指定名字的回调函数里传回来。</p>
+<h2 id="兼容IE：选择JSONP"><a href="#兼容IE：选择JSONP" class="headerlink" title="兼容IE：选择JSONP"></a>兼容IE：选择JSONP</h2><p>JSONP基本思想是，网页通过添加一个<code>&lt;script&gt;</code>元素，向服务器请求JSON数据，这种做法不受同源政策限制；服务器收到请求后，将数据放在一个指定名字的回调函数里传回来。</p>
 <p>具体地，在某些浏览器不支持cors进行跨域时，通过请求一个js文件，在这个js文件中执行一个回调，而回调中有我们需要的跨域数据。其中，回调的名字可以使用random随机生成，这个名字以callback参数传给后台，后台将函数返回并执行。</p>
+<p>实际中，以上方法可能存在一个缺陷：就是第三方网站可能调用 <code>JSONP</code> 。这可以通过使用 Header 的 <code>Referer</code> 字段告诉浏览器用户在访问当前资源之前的位置，进而实现用户跟踪。</p>
+<p>浏览器的 JavaScript 引擎提供<code>document.referrer</code> 属性，可以查看当前页面的引荐来源。</p>
+<p>具体地，如果 <code>Referer</code> 字段的网址是 <code>JSONP</code> 允许地网址，就放行。否则，就会屏蔽。</p>
 <p><strong>jsonp的优点</strong></p>
 <p>①兼容ie</p>
 <p>②可以实现跨域</p>
